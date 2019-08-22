@@ -1,0 +1,199 @@
+﻿@using Microsoft.AspNet.Identity.Owin;
+@using Microsoft.AspNet.Identity;
+@using System.Web.Http;
+@model ASProject.Models.ViewModels.ManagePetDynamicVM
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+     
+
+}
+<script>
+    checkActiveUser();
+   function checkActiveUser() {
+        var activeUserId = "@System.Web.HttpContext.Current.User.Identity.GetUserId()";
+        if (activeUserId === "") {
+            console.log("No user logged in. Redirecting to login..");
+            window.location.replace("@Url.Action("Login","Account")");
+        }
+    }
+</script>
+
+<div id="div_managepet">
+    <div>
+        <h2>@ViewBag.Status</h2>
+    </div>
+    @using (@Html.BeginForm("AddPetThroughViewModel", "Pet", FormMethod.Post, new { @class = "red darken-2 white-text rounded-corners form-padding", @enctype="multipart/form-data"}))
+    {
+        <div class="card-action">
+            <h2>Add Item</h2>
+            <hr />
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(false, "")
+            <div>
+
+                <label for="Category" class="white-text">Category</label>
+                @Html.TextBoxFor(m => m.Kind, new { @class = "white-text" })
+            </div>
+            <div>
+
+                <label for="Brand" class="white-text">Brand</label>
+                @Html.TextBoxFor(m => m.Breed, new { @class = "white-text" })
+            </div>
+            <div>
+                <label for="Name" class="white-text">Name</label>
+                @Html.TextBoxFor(m => m.Name, new { @class = "white-text" })
+            </div>
+            <div>
+                <input id="file_input" name="Images" type="file" multiple="" hidden />
+                <p id="p_selectedFiles" hidden>filenames</p>
+                <button id="btn_browse" type="button" class="btn orange darken-2">Upload image</button>
+            </div>
+            <br />
+            <div>
+                <div id="div-constraints">
+                    <label for="Constraints" class="white-text">Additional Info</label>
+                    <button id="btn-plus" type="button" class="btn orange">+</button>
+                    <button id="btn-minus" type="button" class="btn orange">-</button>
+                    
+
+                    <!--
+                    <span id="span-model" name="span_model"><input id="Constraints" name="Constraints" hidden /><br /></span>
+                        -->
+
+                    <div id="textboxblock" style="margin-top:20px">
+                        <!--Would contain the dynamic constraints-->
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn orange darken-2">Submit</button>
+        </div>
+    }
+    <!--
+
+        <p><label for="kind">Kind: </label><input id="txt_kind" name="kind" /></p>
+        <p><label for="kind">Name: </label><input id="txt_name" name="name" /></p>
+        <p><label for="consts">Constraint: </label><input id="txt_consts" name="consts" /></p>
+        <button id="btn_Submit">Submit</button>
+
+    -->
+
+</div>
+
+<script src="~/Scripts/data-utility.js" type="text/javascript"></script>
+<script type="text/javascript">
+
+
+    console.log("inside managepet");
+    
+    var btnSubmit = document.querySelector("#btn_Submit");
+
+    var p_images = document.getElementById("p_selectedFiles");
+    var file_input = document.getElementById("file_input");
+    document.getElementById("btn-plus").addEventListener("click", addField);
+    document.getElementById("btn-minus").addEventListener("click", reduceField);
+    file_input.addEventListener("change", displaySelectedFilesInformation);
+    document.getElementById("btn_browse").onclick = browseFilesEvent;
+
+
+
+    function addField() {
+
+        var container = document.querySelector("#textboxblock");
+        //create the textfield with formatted attribs:
+        var count = document.querySelectorAll("input[id*='Constraints_'").length;//*= is the operator used for LIKE param%
+        var div = document.createElement("div");
+        div.setAttribute("style", "margin-bottom:20px;");
+        var description = document.createElement("input");
+        description.setAttribute('id', "Constraints_" + count + "__Description");
+        description.setAttribute('name', "Constraints[" + count + "].Description");
+        description.setAttribute("class", "white-text");
+        //prepend a label:
+        var label = document.createElement("label");
+        label.setAttribute("for", "Constraints_" + count + "__Description");
+        label.textContent = "Dynamic property" + " " + ++count;
+        label.setAttribute("class", "white-text");
+        div.appendChild(label);
+        div.appendChild(description);
+
+
+        container.appendChild(div);
+
+
+        /*
+        //version 1:
+        var spans = document.querySelectorAll('span[name="span_model"]');
+        var count = spans.length-1;
+        var container = document.querySelector('#textboxblock');
+
+
+        var copy = spans[0].cloneNode(true);
+        //remove hidden attr:
+        copy.querySelectorAll("input")[0].removeAttribute("hidden");
+        //configure id and name acc to format for viewmodel binding:
+        copy.querySelectorAll("input")[0].setAttribute('id', "Constraints_" + count + "__Description");
+        copy.querySelectorAll("input")[0].setAttribute('name', "Constraints[" + count + "].Description");
+        container.appendChild(copy);
+        */
+
+
+    }
+    function reduceField() {
+        var textboxblock = document.getElementById("textboxblock");
+        //console.log(constraintFields);
+        if (textboxblock.childNodes.length > 0) {
+            textboxblock.removeChild(textboxblock.lastChild);
+        }
+
+    }
+    function getFileInput() {
+        var file_input = document.getElementById("file_input");
+        return file_input.files[0];
+    }
+    function displaySelectedFilesInformation() {
+        
+        var textContent = "Selected files:<br> ";
+        var files = file_input.files;
+        console.log(file_input.files);
+        if (files.length > 0) {
+            for (var i = 0; i < files.length; i++) {
+                if (i == files.length - 1) {
+                    textContent = textContent + files[i].name;
+                    break;
+                }
+                textContent = textContent + files[i].name;
+                textContent = textContent +  "<br>";
+                
+            }
+            console.log("textContent = " + textContent);
+            p_images.innerHTML = textContent;
+            p_images.hidden = false;
+        }
+
+    }
+    function browseFilesEvent() {
+        document.getElementById('file_input').click();
+        //p_images.hidden = true;
+    }
+
+
+    function submit() {
+        var xhttp = new XMLHttpRequest();
+        var kind = document.querySelector("#txt_kind").value;
+        var name = document.querySelector("#txt_name").value;
+        var consts = document.querySelector("#txt_consts").value;
+        var image = getFileInput();
+        var pet = { Kind: kind, Name: name, Consts: consts, Images:image };//prop names should be exactly the same as those in the model for proper binding
+
+        (()=>{
+            xhttp.open('POST', "@Url.Action("AddPet", "Pet")");
+            xhttp.setRequestHeader("Content-Type", "application/json");
+            xhttp.onload = function () {
+                window.location.replace("@Url.Action("Pets", "Home", new {status = "Pet added!"})");
+            };
+            xhttp.onerror = function () {
+                alert(xhttp.responseText);
+            };
+            xhttp.send(JSON.stringify(pet)); 
+        })();
+    }
+</script>

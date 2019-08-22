@@ -1,0 +1,48 @@
+﻿
+<div id="parent_content">
+    <!--the materialize "loading" widget-->
+    <div id="loader" class="center-align" hidden>
+        <div class="preloader-wrapper big active">
+            <div class="spinner-layer spinner-blue-only">
+                <div class="circle-clipper left">
+                    <div class="circle"></div>
+                </div><div class="gap-patch">
+                    <div class="circle"></div>
+                </div><div class="circle-clipper right">
+                    <div class="circle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="pet_collection" class="row">
+        <!--where the dynamic elements would be added-->
+    </div>
+</div>
+
+<template id="template_pet">
+
+    <!--The template as the custom element's encapsulated markup-->
+
+    <div class="col s4 hover-opaque">
+        <div class="card rounded-corners">
+            <div class="card-image" style="height:200px; width:300px;">
+                <img id="pet_image" class="img--size-inherit activator" />
+            </div>
+            <div class="card-content activator red darken-2 white-text">
+                <span id="span_name" class="card-title activator">**displayed name**</span>
+            </div>
+            <div id ="div_reveal" class="card-reveal red darken-3 white-text" >
+                <span id="span_name_reveal" class="card-title">**item name**</span>
+                <p id="p_kind">Material: pets[i].Kind</p>
+                <p id="p_breed">Brand: pets[i].Breed</p>
+                <p style="font-weight:bold;">Extra info:</p>
+                <ul id="ul_extra_infos" class="collection">
+                    <!--where the list items would be added dynamically-->
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+
+</template>

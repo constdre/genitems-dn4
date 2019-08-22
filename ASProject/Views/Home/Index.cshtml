@@ -1,0 +1,84 @@
+﻿@using Microsoft.AspNet.Identity.Owin;
+@using Microsoft.AspNet.Identity;
+@using System.Web.Http;
+@using ASProject.Models;
+
+<div>
+    <h3>Items</h3>
+</div>
+
+<div id="div_search" class="row">
+    <!--Utilizes grid widget of MaterializeCSS-->
+    <div class="input-field col s10">
+        <input type="text" id="txt_search" />
+        <label for="txt_search" class="black-text">Search item</label>
+    </div>
+    <div class="input-field col s2">
+        <button id="btn_search" class="btn orange darken-2">Search</button>
+    </div>
+</div>
+
+<div id="div_empty" class="red darken-2 white-text rounded-corners form-padding" hidden>
+    <h2 id="h2_empty">There are no items yet. Add some <a href="@Url.Action("ManagePet","Pet")">here</a></h2>
+</div>
+
+
+@{ Html.RenderPartial("~/Views/Shared/Templates/PetDescriptionTemplate.cshtml");}
+
+<!--<script type="module" src="~/WebComponents/div-pet.js"></script>-->
+
+<script type="text/javascript" src="~/Content/js/data-utility.js"></script>
+<script>
+
+    var div_empty = document.getElementById("div_empty");
+    var loader = document.getElementById("loader");
+    var parent_div = document.getElementById("pet_collection");
+    var url = "@Url.Action("GetPetsIndex", "Pet")";
+    var url_image = "@Url.Action("GetDisplayImage", "Pet")";
+
+    displayPet.execute(url, loader, url_image); //from the external js: displayPets.js
+
+    //
+    var searchField = document.getElementById("txt_search");
+    
+
+    searchField.addEventListener("keyup", searchItems);
+    var searchButton = document.getElementById("btn_search");
+    searchButton.addEventListener("click", displaySearchResults);
+    var emptyCount = 0;
+
+    function searchItems() {
+
+        if (searchField.value.length > 0) {
+            emptyCount = 0;
+        }
+        if (searchField.value === "" && emptyCount === 0) {
+            div_empty.hidden = true;
+            removeChildNodes(parent_div); //from an external helper functions js "data-utility.js"
+            displayPet.execute(url, loader);
+            emptyCount++;
+        }
+
+    };
+
+    async function displaySearchResults() {
+        
+        var url = "@Url.Action("GetSearchResults", "Pet")?searchParam="+searchField.value;
+
+        removeChildNodes(parent_div);
+        var searchResults = await getResource(url);
+
+        //No items, display empty status:
+        if (searchResults.length <= 0) {
+            console.log("inside search results");
+            var h2_empty = document.getElementById("h2_empty");
+            console.log(h2_empty);
+            h2_empty.innerHTML = "No results with the entry \"" + searchField.value + "\"." + " Go <a href='@Url.Action("Index","Home")'>back</a>";
+            div_empty.hidden = false;
+
+        }
+
+        displayPet.displayPets(searchResults);
+    }
+
+</script>

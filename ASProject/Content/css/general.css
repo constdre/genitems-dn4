@@ -1,0 +1,98 @@
+﻿
+
+/*Improved from this since then*/
+
+body {
+    font-family: 'Roboto', sans-serif;
+    min-height:100vh;
+    position:relative;
+    padding-bottom:6rem;
+}
+
+.extraspace {
+    border-bottom-style:solid;
+}
+.btn:hover {
+    background-color: #ffd180;
+}
+label{
+    display:inline;
+}
+.cardpad {
+    margin-right:20px;
+}
+.form-padding{
+    padding:40px;
+}
+.overflow-padding {
+    padding:20px;
+}
+.rounded-corners {
+    border-radius:12px !important; 
+    overflow:hidden;
+}
+.floor-fade {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    /*background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.6) ), url(../images/background.JPG);*/
+    background: url(../images/matdesign.png);
+}
+.topnav {
+    background-color: orange; /*named orange accent 2 in materialize*/
+    overflow: hidden;
+}
+
+    .topnav a {
+        float: left;
+        text-align: center;
+        text-decoration: none;
+        padding: 14px 16px;
+        font-size: 17px;
+        color:black;
+    }
+
+        .topnav a:hover {
+            background-color: #ffd180; /*orange accent 1 in materialize*/
+        }
+    
+
+.topnav__items-right {
+    float: right;
+}
+.hover-opaque:hover {
+    opacity: 0.9;
+    cursor:pointer;
+}
+
+.img--size-inherit{
+    width:inherit;
+    height:inherit;
+}
+
+.div--center {
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
+.itemcardcustomsize{
+    height: 300px;
+    width: 300px;
+}
+.bottom_drop{
+    position:absolute;
+    bottom:0;
+    max-width:100%;
+}
+.div--padding-status{
+    padding:10px;
+}
+.footer
+{
+   margin-top:20px;
+   width:inherit;
+   position:absolute;
+   clear:both;
+   bottom:0;
+   text-align:center;
+}
