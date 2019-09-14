@@ -1,4 +1,4 @@
-# genitems-dn4
+# genitems-dnf
 
 *Template Item CRUD Web Application* which highlights its utilization of
 - both Form Submit and **AJAX** in sending requests
