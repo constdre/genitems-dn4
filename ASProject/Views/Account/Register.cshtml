@@ -5,65 +5,66 @@
 
 <h2>@ViewBag.Title</h2>
 
-@using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "col s12 red darken-2 white-text rounded-corners", role = "form", @style="padding:40px;"}))
+@using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "col s12 orange lighten-2  rounded-corners z-depth-4", role = "form", @style="padding:40px;"}))
 {
     @Html.AntiForgeryToken() //security feature for no "data injection" from an external source
-    <h4>Create a new account.</h4>
-    <hr />
+
+    
+    
 
     @Html.ValidationSummary("", new { @class = "text-danger" })//creates <ul> elements of validation messages, in its own div
     
-    <div class="form-group">
-        @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label white-text" })
+    <div class="">
+        @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label black-text" })
         <div class="col-md-10">
-            @Html.TextBoxFor(m => m.Email, new { @class = "form-control white-text" })
+            @Html.TextBoxFor(m => m.Email, new { @class = "form-control black-text normal-input" })
         </div>
     </div>
 
-    <div class="form-group">
-        @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label white-text" })
+    <div class="input-between">
+        @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label black-text" })
         <div class="col-md-10">
-            @Html.PasswordFor(m => m.Password, new { @class = "form-control white-text" })
+            @Html.PasswordFor(m => m.Password, new { @class = "form-control black-text normal-input" })
         </div>
     </div>
 
-    <div class="form-group">
-        @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 control-label white-text" })
+    <div class="input-between">
+        @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 control-label black-text" })
         <div class="col-md-10">
-            @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control white-text" })
+            @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control black-text" })
         </div>
     </div>
 
-    <div>
+    <div class="input-between">
 
-        <label for="Location_Country" class="white-text">Country</label>
+        <label for="Location_Country" class="black-text">Country</label>
 
-        <select id="Location_Country" class="browser-default" onchange="checkCountry()">
+        <select class="browser-default" id="Location_Country" onchange="checkCountry()" style="margin-top:10px">
             <option value="" selected disabled>Choose here</option>
             <option value="united_states">United States</option>
             <option value="philippines">Philippines</option>
         </select>
 
     </div>
-    <div id="div_state" hidden>
-        <label for="Location__State" class="white-text">State</label>
+    <div class="input-between" id="div_state" hidden>
+        <label for="Location__State" class="black-text">State</label>
         <input id="Location__State" name="Location.State" type="Text" />
     </div>
-    <div>
+    <div class="input-between">
         @*@Html.LabelFor(m => m.City)
         @Html.TextBoxFor(m => m.City)*@
-        <label for="Location__City" class="white-text">City</label>
-        <input id="Location__City" class="white-text" name="Location.City" type="Text" />
+        <label for="Location__City" class="black-text">City</label>
+        <input id="Location__City" class="black-text" name="Location.City" type="Text" />
     </div>
-    <div>
+    <div class="input-between">
         @*@Html.LabelFor(m => m.ZipCode)
         @Html.TextBoxFor(m => m.ZipCode)*@
-        <label for="Location__ZipCode" class="white-text">Zip Code</label>
-        <input id="Location__ZipCode" class="white-text" name="Location.ZipCode" type="Text" />
+        <label for="Location__ZipCode" class="black-text">Zip Code</label>
+        <input id="Location__ZipCode" class="black-text" name="Location.ZipCode" type="Text" />
     </div>
-    <div style="margin-top:10px;">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" class="btn orange" value="Register" />
+    <div class="form-bot-actions">
+        <div class="">
+            <input type="submit" class="btn orange black-text" value="Register" />
         </div>
     </div>
 }

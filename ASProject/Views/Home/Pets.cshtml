@@ -8,7 +8,7 @@
 
 @if(ViewBag.Description != null)
 {
-<div class="green darken-2 white-text rounded-corners div--padding-status" style="margin-top:20px;">
+<div class="green black-text rounded-corners div--padding-status" style="margin-top:20px;">
     <h5>@ViewBag.Description</h5>
 </div>
 }
@@ -16,8 +16,8 @@
 <h2>@ViewBag.Title</h2>
 
 <div id="content">
-    <div id="div_empty" class="red darken-2 white-text rounded-corners form-padding" hidden>
-        <h2>There are no items yet. Add some <a href="@Url.Action("ManagePet","Pet")">here</a></h2>
+    <div id="div_empty" class="orange lighten-2 black-text rounded-corners form-padding space-top" hidden>
+        <h3>You have no items yet. Add some <a href="@Url.Action("ManagePet","Pet")">here</a></h3>
     </div>
 </div>
 
@@ -26,7 +26,7 @@
 
 
 
-<button onclick='window.location.href="@Url.Action("ManagePet", "Pet")"' class="btn-large orange darken-2 black-text">Add Item</button>
+<button onclick='window.location.href="@Url.Action("ManagePet", "Pet")"' class="btn-large orange darken-2 black-text" style="margin-top:2rem">Add Item</button>
 
 
 

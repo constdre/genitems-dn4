@@ -18,42 +18,41 @@
     }
 </script>
 
-<div id="div_managepet">
+<div id="div_managepet" class="center-form">
     <div>
         <h2>@ViewBag.Status</h2>
     </div>
-    @using (@Html.BeginForm("AddPetThroughViewModel", "Pet", FormMethod.Post, new { @class = "red darken-2 white-text rounded-corners form-padding", @enctype="multipart/form-data"}))
+    @using (@Html.BeginForm("AddPetThroughViewModel", "Pet", FormMethod.Post, new { @class = "orange lighten-2 black-text rounded-corners form-padding z-depth-3 single-form-content", @enctype="multipart/form-data"}))
     {
         <div class="card-action">
-            <h2>Add Item</h2>
-            <hr />
+            <h3>Add Item</h3>
             @Html.AntiForgeryToken()
             @Html.ValidationSummary(false, "")
-            <div>
+            <div class="space-top">
 
-                <label for="Category" class="white-text">Category</label>
-                @Html.TextBoxFor(m => m.Kind, new { @class = "white-text" })
+                <label for="Category" class="black-text">Category</label>
+                @Html.TextBoxFor(m => m.Kind, new { @class = "black-text" })
             </div>
             <div>
 
-                <label for="Brand" class="white-text">Brand</label>
-                @Html.TextBoxFor(m => m.Breed, new { @class = "white-text" })
+                <label for="Brand" class="black-text">Brand</label>
+                @Html.TextBoxFor(m => m.Breed, new { @class = "black-text" })
             </div>
             <div>
-                <label for="Name" class="white-text">Name</label>
-                @Html.TextBoxFor(m => m.Name, new { @class = "white-text" })
+                <label for="Name" class="black-text">Name</label>
+                @Html.TextBoxFor(m => m.Name, new { @class = "black-text" })
             </div>
             <div>
                 <input id="file_input" name="Images" type="file" multiple="" hidden />
                 <p id="p_selectedFiles" hidden>filenames</p>
-                <button id="btn_browse" type="button" class="btn orange darken-2">Upload image</button>
+                <button id="btn_browse" type="button" class="btn orange darken-2 black-text space-top-btn">Upload image</button>
             </div>
             <br />
             <div>
-                <div id="div-constraints">
-                    <label for="Constraints" class="white-text">Additional Info</label>
-                    <button id="btn-plus" type="button" class="btn orange">+</button>
-                    <button id="btn-minus" type="button" class="btn orange">-</button>
+                <div id="div-constraints" class="input-between">
+                    <label for="Constraints" class="black-text" style="margin-right:1rem;">Additional Info</label>
+                    <button id="btn-plus" type="button" class="btn orange black-text"style="margin-right:0.3rem;" >+</button>
+                    <button id="btn-minus" type="button" class="btn orange black-text" >-</button>
                     
 
                     <!--
@@ -65,7 +64,10 @@
                     </div>
                 </div>
             </div>
-            <button type="submit" class="btn orange darken-2">Submit</button>
+            
+            <div class="flex-center space-top">
+                <button type="submit" class="btn orange darken-2 black-text" style="">Submit</button>
+            </div>
         </div>
     }
     <!--
@@ -106,12 +108,12 @@
         var description = document.createElement("input");
         description.setAttribute('id', "Constraints_" + count + "__Description");
         description.setAttribute('name', "Constraints[" + count + "].Description");
-        description.setAttribute("class", "white-text");
+        description.setAttribute("class", "black-text");
         //prepend a label:
         var label = document.createElement("label");
         label.setAttribute("for", "Constraints_" + count + "__Description");
         label.textContent = "Dynamic property" + " " + ++count;
-        label.setAttribute("class", "white-text");
+        label.setAttribute("class", "black-text");
         div.appendChild(label);
         div.appendChild(description);
 

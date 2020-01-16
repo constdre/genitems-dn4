@@ -15,20 +15,23 @@
     <link href="~/Content/css/general.css" rel="stylesheet" />
 </head>
 <body class="floor-fade">
+
+
+
     @{
         ApplicationUser user = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(System.Web.HttpContext.Current.User.Identity.GetUserId());
     }
     <div class="topnav z-depth-2" name="navbar">
 
-        @Html.ActionLink("*InsertLogoHere*", "Index", "Home")
+        @Html.ActionLink("ASProject", "Index", "Home", null, new { @class = "logo" })
         @Html.ActionLink("Home", "Index", "Home")
         @Html.ActionLink("About", "About", "Home")
 
-        
+
         @if (Request.IsAuthenticated)
         {
             @Html.ActionLink("My Items", "Pets", "Home")
-            <div class="topnav__items-right">
+            <div class="right">
                 <a href="@Url.Action("Index","Manage")">Hello @user.UserName!</a>
                 <a href="@Url.Action("LogOff","Account")">Log off</a>
             </div>
@@ -36,22 +39,22 @@
         }
         else
         {
-            <div class="topnav__items-right">
+            <div class="right">
                 @Html.ActionLink("Register", "Register", "Account")
                 @Html.ActionLink("Log In", "Login", "Account")
             </div>
         }
 
+
     </div>
     <div class="container">
         @RenderBody()
-        
-        <footer class="footer">
-            <hr />
-            <p>Andre's Footer</p>
-        </footer>
-    </div>
 
+
+    </div>
+    <footer class="footer">
+        <p>Andre — ASP.NET MVC 4.6 and EF 6 Template Web Application</p>
+    </footer>
     @RenderSection("scripts", required: false)
 
 </body>

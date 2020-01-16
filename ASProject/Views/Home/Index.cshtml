@@ -14,12 +14,12 @@
         <label for="txt_search" class="black-text">Search item</label>
     </div>
     <div class="input-field col s2">
-        <button id="btn_search" class="btn orange darken-2">Search</button>
+        <button id="btn_search" class="btn orange darken-2 black-text">Search</button>
     </div>
 </div>
 
-<div id="div_empty" class="red darken-2 white-text rounded-corners form-padding" hidden>
-    <h2 id="h2_empty">There are no items yet. Add some <a href="@Url.Action("ManagePet","Pet")">here</a></h2>
+<div id="div_empty" class="orange lighten-2 rounded-corners form-padding" hidden>
+    <h3 id="h2_empty">Marketplace Empty</h3>
 </div>
 
 
@@ -51,6 +51,7 @@
 
         if (searchField.value.length > 0) {
             emptyCount = 0;
+            //displaySearchResults();
         }
         if (searchField.value === "" && emptyCount === 0) {
             div_empty.hidden = true;
