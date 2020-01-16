@@ -1,14 +1,41 @@
 ﻿
 
 /*Improved from this since then*/
-
+*{
+    box-sizing:border-box;
+}
 body {
+    position:relative;
     font-family: 'Roboto', sans-serif;
     min-height:100vh;
+    margin:0;
+    padding:0 0 3rem 0;
     position:relative;
     padding-bottom:6rem;
 }
-
+.container{
+    
+}
+.single-form-content{
+    margin: 0 auto;
+    width:50%;
+}
+.center-element{
+    margin:0 auto;
+}
+.flex-center{
+    display:flex;
+    flex-direction:row;
+    justify-content:center;
+}
+.form-heading{
+    
+    margin-bottom:3rem;
+}
+.input-between{
+    margin-top:1rem;
+}
+.
 .extraspace {
     border-bottom-style:solid;
 }
@@ -40,6 +67,7 @@ label{
 }
 .topnav {
     background-color: orange; /*named orange accent 2 in materialize*/
+    padding:0 5rem;
     overflow: hidden;
 }
 
@@ -57,17 +85,37 @@ label{
         }
     
 
-.topnav__items-right {
-    float: right;
+.nav__item {
+}
+.topnav a:not(:last-child){
+    margin-right:0.5rem;
+}
+.normal-input:focus {
+    border-bottom: none !important;
+    /*box-shadow: 0 1px 0 0 #000;*/
+}
+.form-bot-actions{
+    margin-top:2rem;
+}
+.space-top-btn{
+    margin-top:2rem;
+}
+.space-top{
+    margin-top:3rem;
+}
+.logo{
+    font-size:2rem;
 }
 .hover-opaque:hover {
     opacity: 0.9;
     cursor:pointer;
 }
-
-.img--size-inherit{
-    width:inherit;
-    height:inherit;
+.card{
+    width:330px;
+}
+.card-item-picture {
+    width:350px;
+    height: 200px;
 }
 
 .div--center {
@@ -85,14 +133,20 @@ label{
     max-width:100%;
 }
 .div--padding-status{
-    padding:10px;
+    padding:1rem 2rem;
 }
 .footer
 {
-   margin-top:20px;
-   width:inherit;
-   position:absolute;
-   clear:both;
+   background-color:orange;
    bottom:0;
+   position:absolute;
+   height:3rem;
+   width:100%;
+   padding:1rem 0;
+   clear:both;
+   margin-top:20px;
    text-align:center;
+}
+.footer p{
+    margin:0; padding:0;
 }
