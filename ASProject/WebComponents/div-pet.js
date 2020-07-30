@@ -1,5 +1,6 @@
 ﻿
 class DivPet extends HTMLElement {
+
     constructor() {
 
         super();
@@ -7,7 +8,6 @@ class DivPet extends HTMLElement {
         let templateNode = template.content.cloneNode(true); //true means deep cloning where the element, its attributes, and children are copied
         const shadowRoot = this.attachShadow({ mode: 'open' });
         shadowRoot.appendChild(templateNode); 
-        
 
     }
 
