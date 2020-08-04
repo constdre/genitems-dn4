@@ -16,7 +16,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ASProject</RootNamespace>
     <AssemblyName>ASProject</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <Use64BitIISExpress />
@@ -216,32 +216,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations_ApplicationDbContext\201810171952095_InitialCreate.cs" />
-    <Compile Include="Migrations_ApplicationDbContext\201810171952095_InitialCreate.Designer.cs">
-      <DependentUpon>201810171952095_InitialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations_ApplicationDbContext\201812310606484_AddUserLocation.cs" />
-    <Compile Include="Migrations_ApplicationDbContext\201812310606484_AddUserLocation.Designer.cs">
-      <DependentUpon>201812310606484_AddUserLocation.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations_ApplicationDbContext\Configuration.cs" />
-    <Compile Include="Migrations_SystemContext\201810172039522_InitialCreate.cs" />
-    <Compile Include="Migrations_SystemContext\201810172039522_InitialCreate.Designer.cs">
-      <DependentUpon>201810172039522_InitialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations_SystemContext\201812310600335_AddPetTable.cs" />
-    <Compile Include="Migrations_SystemContext\201812310600335_AddPetTable.Designer.cs">
-      <DependentUpon>201812310600335_AddPetTable.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations_SystemContext\201901090724266_PetImageModelUpdate_AdditionalInfo.cs" />
-    <Compile Include="Migrations_SystemContext\201901090724266_PetImageModelUpdate_AdditionalInfo.Designer.cs">
-      <DependentUpon>201901090724266_PetImageModelUpdate_AdditionalInfo.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations_SystemContext\201901150639176_Pet_PetImageModelUpdate.cs" />
-    <Compile Include="Migrations_SystemContext\201901150639176_Pet_PetImageModelUpdate.Designer.cs">
-      <DependentUpon>201901150639176_Pet_PetImageModelUpdate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations_SystemContext\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\POCOs\Constraint.cs" />
     <Compile Include="Models\POCOs\Location.cs" />
@@ -256,6 +230,7 @@
     <Compile Include="Repository\IRepository.cs" />
     <Compile Include="Repository\Repository.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="Utils\Constants.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\css\general.css" />
@@ -266,27 +241,13 @@
     <Content Include="Content\images\matdesign.png" />
     <Content Include="Content\images\zoo.jpg" />
     <Content Include="Content\js\data-utility.js" />
-    <Content Include="Content\js\materialize.js" />
-    <Content Include="Content\js\materialize.min.js" />
+    <Content Include="Scripts\materialize.js" />
+    <Content Include="Scripts\materialize.min.js" />
     <Content Include="favicon.ico" />
-    <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
-    <Content Include="Scripts\bootstrap.js" />
-    <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="Scripts\jquery-3.3.1.intellisense.js" />
-    <Content Include="Scripts\jquery-3.3.1.js" />
-    <Content Include="Scripts\jquery-3.3.1.min.js" />
-    <Content Include="Scripts\jquery-3.3.1.slim.js" />
-    <Content Include="Scripts\jquery-3.3.1.slim.min.js" />
-    <None Include="Scripts\jquery.validate-vsdoc.js" />
-    <Content Include="Scripts\jquery.validate.js" />
-    <Content Include="Scripts\jquery.validate.min.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
-    <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="WebComponents\div-pet.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -304,7 +265,7 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Pets.cshtml" />
+    <Content Include="Views\Pet\Pets.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
     <Content Include="Views\Account\ConfirmEmail.cshtml" />
@@ -333,33 +294,7 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
-    <Content Include="fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <None Include="packages.config" />
-    <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
-    <Content Include="Scripts\jquery-3.3.1.min.map" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations_ApplicationDbContext\201810171952095_InitialCreate.resx">
-      <DependentUpon>201810171952095_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations_ApplicationDbContext\201812310606484_AddUserLocation.resx">
-      <DependentUpon>201812310606484_AddUserLocation.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations_SystemContext\201810172039522_InitialCreate.resx">
-      <DependentUpon>201810172039522_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations_SystemContext\201812310600335_AddPetTable.resx">
-      <DependentUpon>201812310600335_AddPetTable.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations_SystemContext\201901090724266_PetImageModelUpdate_AdditionalInfo.resx">
-      <DependentUpon>201901090724266_PetImageModelUpdate_AdditionalInfo.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations_SystemContext\201901150639176_Pet_PetImageModelUpdate.resx">
-      <DependentUpon>201901150639176_Pet_PetImageModelUpdate.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
