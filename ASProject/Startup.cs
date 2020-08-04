@@ -8,7 +8,6 @@ namespace ASProject
     {
         public void Configuration(IAppBuilder app)
         {
-            
             ConfigureAuth(app);
         }
     }

@@ -19,10 +19,6 @@ namespace ASProject.Repository
             EntitySet = dbContext.GetEntitySet<T>();
         }
 
-
-
-
-        //implemented methods from interface:
         public string Add(T entity)
         {
             try
@@ -36,25 +32,26 @@ namespace ASProject.Repository
                 return e.ToString();
             }
 
-            return "success";
+            return Utils.Constants.SUCCESS_MESSAGE;
 
         }
 
-        public Dictionary<string,object> Delete(int id)
+        public Dictionary<string, object> Delete(int id)
         {
             Dictionary<string, object> statusDict = new Dictionary<string, object>();
             T entity = GetEntityById(id);
             try
-            { 
+            {
                 System.Diagnostics.Debug.WriteLine("Was successfully able to retrieve :" + entity.Id);
                 EntitySet.Remove(entity);
                 dbContext.SaveChanges();
-
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 statusDict.Add("status", ex.ToString());
             }
-            statusDict.Add("status", "success");
+
+            statusDict.Add("status", Utils.Constants.SUCCESS_MESSAGE);
             statusDict.Add("removedObj", entity);
             return statusDict;
         }
@@ -68,12 +65,13 @@ namespace ASProject.Repository
 
         public T GetEntityById(int id)
         {
-            return EntitySet.Where(t => t.Id == id).FirstOrDefault();
+            return EntitySet.FirstOrDefault(t => t.Id == id);
         }
 
-        public string[] Update(T entity)
+        public string Update(T entity)
         {
-            throw new NotImplementedException();
+            string status = "success";
+            return status;
         }
     }
 }

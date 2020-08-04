@@ -13,6 +13,7 @@ using System.Diagnostics;
 
 namespace ASProject.Controllers
 {
+
     [Authorize]
     public class AccountController : Controller
     {
@@ -35,9 +36,9 @@ namespace ASProject.Controllers
             {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
-            private set 
-            { 
-                _signInManager = value; 
+            private set
+            {
+                _signInManager = value;
             }
         }
 
@@ -55,7 +56,7 @@ namespace ASProject.Controllers
 
         //
         // GET: /Account/Login
-        
+
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {

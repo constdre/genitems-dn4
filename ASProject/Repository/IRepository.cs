@@ -11,8 +11,7 @@ namespace ASProject.Repository
     interface IRepository<T> where T : IEntity
     {
         string Add(T entity);
-        //T GetEntityById<E>(E id) where E : struct;
-        string[] Update(T entity);
+        string Update(T entity);
         T GetEntityById(int id);
         IQueryable<T> GetAll();
         Dictionary<string,object> Delete(int id);

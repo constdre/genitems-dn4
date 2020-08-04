@@ -1,8 +1,10 @@
-﻿
-
+﻿@import 'https://fonts.googleapis.com/css?family=Raleway|Roboto';
 /*Improved from this since then*/
 *{
     box-sizing:border-box;
+}
+::-moz-placeholder{
+    color:black;
 }
 body {
     position:relative;
@@ -11,10 +13,12 @@ body {
     margin:0;
     padding:0 0 3rem 0;
     position:relative;
-    padding-bottom:6rem;
 }
-.container{
-    
+textarea:focus, input:focus {
+    outline: none;
+}
+.container-center{
+    text-align:center;
 }
 .single-form-content{
     margin: 0 auto;
@@ -35,7 +39,7 @@ body {
 .input-between{
     margin-top:1rem;
 }
-.
+
 .extraspace {
     border-bottom-style:solid;
 }
@@ -84,15 +88,30 @@ label{
             background-color: #ffd180; /*orange accent 1 in materialize*/
         }
     
-
-.nav__item {
-}
 .topnav a:not(:last-child){
     margin-right:0.5rem;
 }
-.normal-input:focus {
-    border-bottom: none !important;
-    /*box-shadow: 0 1px 0 0 #000;*/
+.horizontal-7030{
+    display:flex;
+    flex-direction:row;
+    align-items:center;
+
+}
+.horizontal-5050{
+    display:flex;
+    flex-direction:row;
+    justify-content:space-evenly;
+    align-items:flex-end;
+}
+
+.normal-input {
+    background-color:transparent;
+    border:none;
+    border-bottom:2px solid gray;
+    color:black;
+}
+.normal-input--large{
+    font-size:2rem;
 }
 .form-bot-actions{
     margin-top:2rem;
@@ -105,6 +124,9 @@ label{
 }
 .logo{
     font-size:2rem;
+}
+.row .col{
+    padding:0;
 }
 .hover-opaque:hover {
     opacity: 0.9;
@@ -137,14 +159,14 @@ label{
 }
 .footer
 {
-   background-color:orange;
    bottom:0;
    position:absolute;
+   background-color:orange;
    height:3rem;
    width:100%;
    padding:1rem 0;
    clear:both;
-   margin-top:20px;
+   margin-top:auto;
    text-align:center;
 }
 .footer p{

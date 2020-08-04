@@ -9,7 +9,10 @@ namespace ASProject.DAL
 {
     public interface IDbContext:IDisposable
     {
+        
         DbSet<T> GetEntitySet<T>() where T : class, IEntity;
         int SaveChanges();
+
+        //and Dispose() method from IDisposable interface
     }
 }

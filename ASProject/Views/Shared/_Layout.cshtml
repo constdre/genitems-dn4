@@ -9,14 +9,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Item Inventory</title>
 
-    <link href="~/Content/css/materialize.min.css" rel="stylesheet" />
-    <script src="~/Content/js/materialize.min.js"></script>
-    <link href="https://fonts.googleapis.com/css?family=Raleway|Roboto" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link href="~/Content/css/general.css" rel="stylesheet" />
 </head>
 <body class="floor-fade">
-
-
 
     @{
         ApplicationUser user = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(System.Web.HttpContext.Current.User.Identity.GetUserId());
@@ -30,7 +26,7 @@
 
         @if (Request.IsAuthenticated)
         {
-            @Html.ActionLink("My Items", "Pets", "Home")
+            @Html.ActionLink("My Items", "Pets", "Pet")
             <div class="right">
                 <a href="@Url.Action("Index","Manage")">Hello @user.UserName!</a>
                 <a href="@Url.Action("LogOff","Account")">Log off</a>
@@ -45,16 +41,17 @@
             </div>
         }
 
-
     </div>
+
     <div class="container">
         @RenderBody()
-
-
     </div>
+
     <footer class="footer">
-        <p>Andre — ASP.NET MVC 4.6 and EF 6 Template Web Application</p>
+        <p>Andre — ASP.NET MVC 4.8 and EF 6 Template Web Application</p>
     </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     @RenderSection("scripts", required: false)
 
 </body>

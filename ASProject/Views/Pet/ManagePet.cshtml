@@ -1,14 +1,10 @@
-﻿@using Microsoft.AspNet.Identity.Owin;
-@using Microsoft.AspNet.Identity;
-@using System.Web.Http;
+﻿@using Microsoft.AspNet.Identity;
 @model ASProject.Models.ViewModels.ManagePetDynamicVM
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-     
-
 }
 <script>
-    checkActiveUser();
+   //checkActiveUser();
    function checkActiveUser() {
         var activeUserId = "@System.Web.HttpContext.Current.User.Identity.GetUserId()";
         if (activeUserId === "") {
@@ -25,16 +21,16 @@
     @using (@Html.BeginForm("AddPetThroughViewModel", "Pet", FormMethod.Post, new { @class = "orange lighten-2 black-text rounded-corners form-padding z-depth-3 single-form-content", @enctype="multipart/form-data"}))
     {
         <div class="card-action">
+
             <h3>Add Item</h3>
             @Html.AntiForgeryToken()
             @Html.ValidationSummary(false, "")
-            <div class="space-top">
 
+            <div class="space-top">
                 <label for="Category" class="black-text">Category</label>
                 @Html.TextBoxFor(m => m.Kind, new { @class = "black-text" })
             </div>
             <div>
-
                 <label for="Brand" class="black-text">Brand</label>
                 @Html.TextBoxFor(m => m.Breed, new { @class = "black-text" })
             </div>
@@ -47,18 +43,12 @@
                 <p id="p_selectedFiles" hidden>filenames</p>
                 <button id="btn_browse" type="button" class="btn orange darken-2 black-text space-top-btn">Upload image</button>
             </div>
-            <br />
             <div>
                 <div id="div-constraints" class="input-between">
                     <label for="Constraints" class="black-text" style="margin-right:1rem;">Additional Info</label>
                     <button id="btn-plus" type="button" class="btn orange black-text"style="margin-right:0.3rem;" >+</button>
                     <button id="btn-minus" type="button" class="btn orange black-text" >-</button>
                     
-
-                    <!--
-                    <span id="span-model" name="span_model"><input id="Constraints" name="Constraints" hidden /><br /></span>
-                        -->
-
                     <div id="textboxblock" style="margin-top:20px">
                         <!--Would contain the dynamic constraints-->
                     </div>
@@ -70,14 +60,6 @@
             </div>
         </div>
     }
-    <!--
-
-        <p><label for="kind">Kind: </label><input id="txt_kind" name="kind" /></p>
-        <p><label for="kind">Name: </label><input id="txt_name" name="name" /></p>
-        <p><label for="consts">Constraint: </label><input id="txt_consts" name="consts" /></p>
-        <button id="btn_Submit">Submit</button>
-
-    -->
 
 </div>
 
@@ -85,17 +67,14 @@
 <script type="text/javascript">
 
 
-    console.log("inside managepet");
-    
     var btnSubmit = document.querySelector("#btn_Submit");
-
     var p_images = document.getElementById("p_selectedFiles");
     var file_input = document.getElementById("file_input");
+
     document.getElementById("btn-plus").addEventListener("click", addField);
     document.getElementById("btn-minus").addEventListener("click", reduceField);
     file_input.addEventListener("change", displaySelectedFilesInformation);
-    document.getElementById("btn_browse").onclick = browseFilesEvent;
-
+    document.getElementById("btn_browse").addEventListener("click", browseFilesEvent);
 
 
     function addField() {
@@ -145,7 +124,6 @@
         if (textboxblock.childNodes.length > 0) {
             textboxblock.removeChild(textboxblock.lastChild);
         }
-
     }
     function getFileInput() {
         var file_input = document.getElementById("file_input");

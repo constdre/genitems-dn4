@@ -18,11 +18,5 @@ namespace ASProject.Controllers
             return View();
         }
 
-        public ActionResult Pets(string description)
-        {
-            ViewBag.Message = "Cute creatures";
-            ViewBag.Description = description;
-            return View();
-        }
     }
 }

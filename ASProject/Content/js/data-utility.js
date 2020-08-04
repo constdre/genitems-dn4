@@ -8,31 +8,32 @@ var displayPet = (() => {
         displayPets: displayPets
     };
 
-    async function execute(url, loader, url_image) {
+    async function execute(getPetsUrl, loader) {
 
-        //console.log("inside execute");
+        //gets pets and displays them
 
         loader.hidden = false;
         var pets = [];
-
        
         setTimeout(async function () {
 
-            pets = await getResource(url);
+            pets = await getResource(getPetsUrl);
 
             if (pets.length <= 0) {
                 console.log("inside if statement");
                 document.getElementById("div_empty").hidden = false;
             }
-            displayPets(pets, url_image);
+
+            displayPets(pets);
             loader.hidden = true;
+
         }, 200); //quarter second to sample the loading from MaterializeCSS
 
     }
 
 
     //APPROACH: through a template that's programmatically added to 
-    function displayPets(pets, url_image) {
+    function displayPets(pets) {
 
         var pet_collection = document.getElementById("pet_collection");
         console.log(pets);
@@ -46,22 +47,17 @@ var displayPet = (() => {
             var pet_image = template_pet.getElementById("pet_image");
 
 
-            console.log("Images for item" +i+pets[i].Images.length);
+            console.log("Images for item" + i + pets[i].Images.length);
+
             //check if there's an uploaded image for the pet
-            if (pets[i].Images.length > 0 && pets[i].Images[0].Image !="") {
-                
-                //pet_image.setAttribute("src", url_image + "?petId=" + pets[i].Id);
+            var isAvailable = pets[i].Images.length > 0 && pets[i].Images[0].Image != "";
+            //show default if none
+            var image = isAvailable ?
+                "data:image;base64," + pets[i].Images[0].Image :
+                "../Content/images/clickme.png";
 
-                //displays the first image as of now:
-                pet_image.setAttribute("src", "data:image;base64," + pets[i].Images[0].Image);
-            } else {
-                //default pic
-                pet_image.setAttribute("src", "../Content/images/clickme.png");
-            }
+            pet_image.setAttribute("src", image);
             
-            
-            
-
             var petId = pets[i].Id;
             //visible name span:
             var span_name = template_pet.getElementById("span_name");
@@ -84,7 +80,7 @@ var displayPet = (() => {
             //item general information
             var p_kind = template_pet.getElementById("p_kind");
             p_kind.setAttribute("id", "item" + petId + "_kind");
-            p_kind.textContent = "Material: " + pets[i].Kind;
+            p_kind.textContent = "Category: " + pets[i].Kind;
             var p_breed = template_pet.getElementById("p_breed");
             p_breed.setAttribute("id", "pet" + petId + "_breed");
             p_breed.textContent = "Brand: " + pets[i].Breed;
@@ -113,8 +109,7 @@ var displayPet = (() => {
                 btnAction.textContent = "add to favorites";
             } else {
                 btnAction.textContent = "Delete Item";
-                btnAction.addEventListener("click", deletePet(pets[i].Id, pets[i].Name)); 
-
+                btnAction.addEventListener("click", deletePet(pets[i].Id)); 
             }
            
             divButton.appendChild(btnAction);
@@ -122,10 +117,6 @@ var displayPet = (() => {
             pet_collection.appendChild(template_pet);//the parent element in the document
 
         }
-
-        
-
-        //console.log(parentDiv.childNodes);
 
     }
 
@@ -140,7 +131,7 @@ var displayPet = (() => {
         });
     }
     
-    function deletePet(petId, petName) {
+    function deletePet(petId) {
 
         //experimenting inner functions for closure purposes
         return function () {
@@ -174,7 +165,7 @@ var displayPet = (() => {
 
 
 
-//Utility Methods:
+//=========Utility Methods:
 function removeChildNodes(parentNode) {
     while (parentNode.firstChild) {
         parentNode.removeChild(parentNode.firstChild);
@@ -199,7 +190,6 @@ function getResource(url) {
             resolve(response);
         };
         xhttp.onerror = function () {
-            console.log("inside onerror");
             reject(xhttp.statusText);
         };
         xhttp.send();

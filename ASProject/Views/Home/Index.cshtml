@@ -3,25 +3,22 @@
 @using System.Web.Http;
 @using ASProject.Models;
 
-<div>
+<div style="margin-bottom:3rem;">
     <h3>Items</h3>
 </div>
 
-<div id="div_search" class="row">
-    <!--Utilizes grid widget of MaterializeCSS-->
-    <div class="input-field col s10">
-        <input type="text" id="txt_search" />
-        <label for="txt_search" class="black-text">Search item</label>
+<div id="div_search" class="horizontal-7030" style="margin-bottom:3rem;">
+    <div style="width:100%;">
+        <input type="text" id="txt_search" class="browser-default normal-input normal-input--large" placeholder="Search" style="width:100%"/>
     </div>
-    <div class="input-field col s2">
-        <button id="btn_search" class="btn orange darken-2 black-text">Search</button>
+    <div>
+        <button id="btn_search" class="btn orange darken-2 black-text" style="margin-left:1rem;">Search</button>
     </div>
 </div>
 
 <div id="div_empty" class="orange lighten-2 rounded-corners form-padding" hidden>
     <h3 id="h2_empty">Marketplace Empty</h3>
 </div>
-
 
 @{ Html.RenderPartial("~/Views/Shared/Templates/PetDescriptionTemplate.cshtml");}
 
@@ -33,15 +30,13 @@
     var div_empty = document.getElementById("div_empty");
     var loader = document.getElementById("loader");
     var parent_div = document.getElementById("pet_collection");
-    var url = "@Url.Action("GetPetsIndex", "Pet")";
-    var url_image = "@Url.Action("GetDisplayImage", "Pet")";
 
-    displayPet.execute(url, loader, url_image); //from the external js: displayPets.js
+    var url = "@Url.Action("GetPetsHome", "Pet")";
 
-    //
-    var searchField = document.getElementById("txt_search");
+    displayPet.execute(url, loader); //from the external js: displayPets.js
+
     
-
+    var searchField = document.getElementById("txt_search");
     searchField.addEventListener("keyup", searchItems);
     var searchButton = document.getElementById("btn_search");
     searchButton.addEventListener("click", displaySearchResults);
@@ -63,7 +58,7 @@
     };
 
     async function displaySearchResults() {
-        
+
         var url = "@Url.Action("GetSearchResults", "Pet")?searchParam="+searchField.value;
 
         removeChildNodes(parent_div);

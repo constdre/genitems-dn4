@@ -11,48 +11,45 @@ using Microsoft.AspNet.Identity;
 using System.Web.Http;
 using System.Diagnostics;
 using ASProject.Models.ViewModels;
-using ASProject.Models.DTO;
 using Newtonsoft.Json;
 using System.Data.Entity;
-
 
 namespace ASProject.Controllers
 {
     public class PetController : Controller
     {
 
-        string userId;
-        ApplicationUser activeUser;
+        JsonSerializerSettings referenceLoopIgnore = new JsonSerializerSettings()
+        {
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+        };
 
+        public ActionResult Pets(string description)
+        {
+            ViewBag.Message = "Cute creatures";
+            ViewBag.Description = description;
+            return View();
+        }
         public ActionResult ManagePet(string status)
         {
             ViewBag.Status = status;
             return View();
         }
 
-
-        /// <summary>
-        /// Inserts a pet entity to the db from and success-handled by JavaScript AJAX post request.
-        /// </summary>
-        /// <param name="pet">The pet entity object from the POST request body</param>
-        public void AddPet([FromBody]Pet pet)
+        public void AddPetAjax([FromBody] Pet pet)
         {
-            //Not for form submitted requests.
             //[FromBody] to tell the request data is in the body of a JS AJAX post method.
-
-
-            userId = System.Web.HttpContext.Current.User.Identity.GetUserId();
-            activeUser = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(userId);
             string status = "";
-            RedirectToRouteResult returnAction = null;
-            
+            string userId = System.Web.HttpContext.Current.User.Identity.GetUserId();
+            ApplicationUser activeUser = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(userId);
+
             using (SystemContext dbContext = new SystemContext())
             {
                 Repository<Pet> repo = new Repository<Pet>(dbContext);
                 pet.UserId = activeUser.Id;
                 status = repo.Add(pet);
-
                 Debug.WriteLine("STATUS: " + status);
+
                 //Display the pets:
                 foreach (Pet p in repo.GetAll().ToList())
                 {
@@ -60,18 +57,13 @@ namespace ASProject.Controllers
                 }
 
             }
-            Debug.WriteLine("Context disposed");
-            if (status != "success")
+
+            if (status != Utils.Constants.SUCCESS_MESSAGE)
             {
                 Debug.WriteLine("Unsuccessful.");
-                returnAction = RedirectToAction("ManagePet", new { message = status });
             }
 
-            returnAction = RedirectToAction("Pets", "Home", new { message = status });
-            //return returnAction;
-            //return RedirectToAction("Pets", "Home", new { message = status });
         }
-
 
         public ActionResult AddPetThroughViewModel(ManagePetDynamicVM model)
         {
@@ -79,66 +71,77 @@ namespace ASProject.Controllers
             if (ModelState.IsValid)
             {
 
-                userId = System.Web.HttpContext.Current.User.Identity.GetUserId();
-                activeUser = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(userId);
-                Pet pet = new Pet { UserId = activeUser.Id, Kind = model.Kind, Breed = model.Breed, Name = model.Name, Constraints = model.Constraints };
+                string userId = System.Web.HttpContext.Current.User.Identity.GetUserId();
+                ApplicationUser activeUser = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(userId);
+
+                Pet pet = new Pet
+                {
+                    UserId = activeUser.Id,
+                    Kind = model.Kind,
+                    Breed = model.Breed,
+                    Name = model.Name,
+                    Constraints = model.Constraints
+                };
 
 
-                /*forge the petImages list with the other information PetImage requires*/
+                //build the petImages list with the other information PetImage requires
                 List<PetImage> petImages = GetImagesFromRequest(Request.Files);
-                pet.Images = petImages; //now EF assigns the id and foreign key then inserts them to the PetImages table IMPLICITLY.
+                pet.Images = petImages;
 
+                //Add to DB
                 using (SystemContext dbContext = new SystemContext())
                 {
                     Repository<Pet> repo = new Repository<Pet>(dbContext);
                     string status = repo.Add(pet);
-                    if (status != "success")
+                    if (status != Utils.Constants.SUCCESS_MESSAGE)
                     {
-                        Debug.WriteLine("Unsuccessful. STACK TRACE: \n" + status);
-                        string internalErrorMessage ="An error occured when processing your request.";
+                        Debug.WriteLine("Failed Add Pet. STACK TRACE: \n" + status);
+                        string internalErrorMessage = "An error occured while processing your request.";
                         return RedirectToAction("ManagePet", new { status = internalErrorMessage });
                     }
                 }
-                return RedirectToAction("Pets", "Home", new { description = model.Name + " was successfully added!" });
+
+                var description = model.Name + " was successfully added!";
+                return RedirectToAction("Pets", "Pet", new { description });
             }
             else
             {
                 Debug.WriteLine("MODELSTATE IS INVALID");
                 var errors = ModelState.Where(x => x.Value.Errors.Any())
-                .Select(x => new { x.Key, x.Value.Errors });//Select() forms a new collection 
+                .Select(x => new { x.Key, x.Value.Errors });
                 Debug.WriteLine(errors);
             }
-            ModelState.AddModelError("myKey", "ModelState is invalid. Find the reason how and why."); 
-            return RedirectToAction("ManagePet", new { status = "ERROR" });
+
+            ModelState.AddModelError("myKey", "ModelState is invalid. Find the reason how and why.");
+            return RedirectToAction("ManagePet", new { status = Utils.Constants.FAILED_MESSAGE });
         }
 
         public ActionResult DeletePet([FromBody] int petId)
         {
-            Debug.WriteLine("PetId: " + petId);
-            var statusDict = new Dictionary<string,object>();
+            var statusDict = new Dictionary<string, object>();
             using (SystemContext dbContext = new SystemContext())
             {
                 Repository<Pet> repo = new Repository<Pet>(dbContext);
                 statusDict = repo.Delete(petId);
-                
-            }
-            Debug.WriteLine(statusDict["status"]);
-            Pet removedPet = (Pet)statusDict["removedObj"];
-            string status = "Item deleted : " + removedPet.Name; 
 
-            
-            return RedirectToAction("Pets","Home", new { description = status });
-            
+            }
+
+            Debug.WriteLine(statusDict["status"]);
+            Pet removedPet = (Pet)statusDict["removedObj"];//to do something with the deleted object
+
+            string status = "Item deleted : " + removedPet.Name;
+            return RedirectToAction("Pets", "Pet", new { description = status });
 
         }
         public ActionResult GetDisplayImage(int petId)
         {
             byte[] fileBytes = null;
             string fileType = null;
-            using(SystemContext dbContext = new SystemContext())
+            using (SystemContext context = new SystemContext())
             {
-                var image = dbContext.GetEntitySet<PetImage>().FirstOrDefault((img) => img.PetId == petId && img.IsDisplayPic == true);
+                var image = context.GetEntitySet<PetImage>().FirstOrDefault((img) => img.PetId == petId && img.IsDisplayPic == true);
                 Debug.WriteLine("display image retrieved! filename: " + image.Name);
+                
                 if (image != null)
                 {
                     fileBytes = image.Image;//the byte[]
@@ -149,39 +152,44 @@ namespace ASProject.Controllers
                     Debug.WriteLine("Image is null.");
                 }
             }
-            
+
             return File(fileBytes, fileType);
         }
 
         public ActionResult GetAllPets()
         {
-            Repository<Pet> repo = new Repository<Pet>(new SystemContext());
-            List<Pet> pets = repo.GetAll().ToList();
+            List<Pet> pets;
 
-
-            var list = JsonConvert.SerializeObject(pets,
-            Formatting.None,
-            new JsonSerializerSettings()
+            using (var context = new SystemContext())
             {
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-            });
+                Repository<Pet> repo = new Repository<Pet>(new SystemContext());
+                pets = repo.GetAll().ToList();
+            }
 
+            var list = JsonConvert.SerializeObject(pets, Formatting.None, referenceLoopIgnore);
             return Json(list, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult GetPetsIndex(string userId)
+        public ActionResult GetPetsHome(string userId)
         {
+            //Gets items data, avoids user's items
             userId = System.Web.HttpContext.Current.User.Identity.GetUserId();
-            activeUser = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(userId);
+            ApplicationUser activeUser = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(userId);
+            List<Pet> petsList;
 
-            DbSet<Pet> petSet = new SystemContext().GetEntitySet<Pet>();
-            List<Pet> petsList = (activeUser == null) ? petSet.ToList() : petSet.AsQueryable().Where(p => p.UserId != activeUser.Id).ToList();
-
-
-            var jsonString = JsonConvert.SerializeObject(petsList, Formatting.None, new JsonSerializerSettings()
+            using (var context = new SystemContext())
             {
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-            });
+                DbSet<Pet> petSet = new SystemContext().GetEntitySet<Pet>();
+                petsList = (activeUser == null) ?
+                    petSet.ToList() :
+                    petSet.Where(p => p.UserId != activeUser.Id).ToList();
+            }
+
+            var jsonString = JsonConvert.SerializeObject(
+                petsList,
+                Formatting.None,
+                referenceLoopIgnore
+                );
 
             var jsonResponse = Json(jsonString, JsonRequestBehavior.AllowGet);
             jsonResponse.MaxJsonLength = int.MaxValue;
@@ -189,46 +197,36 @@ namespace ASProject.Controllers
             return jsonResponse;
         }
 
-        
+
         public ActionResult GetPetsOfUser()
         {
-            //DECOUPLE PET IMAGES WITH PET SO DURING RETRIEVAL OF PETS, THE IMAGES ARE NOT INCLUDED = OPTIMIZED PERFORMANCE
-            userId = System.Web.HttpContext.Current.User.Identity.GetUserId();
-            activeUser = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(userId);
 
+            string userId = System.Web.HttpContext.Current.User.Identity.GetUserId();
+            ApplicationUser activeUser = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(userId);
 
             DbSet<Pet> dbSet = new SystemContext().GetEntitySet<Pet>();
-            List<Pet> pets_user = dbSet.AsQueryable().Where(p => p.UserId == activeUser.Id).ToList();
-            Debug.WriteLine("Pets of user numbers: " + pets_user.Count());
+            List<Pet> pets_user = dbSet.Where(p => p.UserId == userId).ToList();
 
-
-            var jsonList= JsonConvert.SerializeObject(pets_user, Formatting.None, new JsonSerializerSettings()
-            {
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore, 
-            });
+            var jsonList = JsonConvert.SerializeObject(pets_user, Formatting.None, referenceLoopIgnore);
 
 
             var jsonResponse = Json(jsonList, JsonRequestBehavior.AllowGet);
             jsonResponse.MaxJsonLength = int.MaxValue;
 
             return jsonResponse;
-
         }
 
         public ActionResult GetSearchResults(string searchParam)
         {
             Debug.WriteLine($"searchParam:  {searchParam}");
-            userId = System.Web.HttpContext.Current.User.Identity.GetUserId();
-            activeUser = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(userId);
+            string userId = System.Web.HttpContext.Current.User.Identity.GetUserId();
+            ApplicationUser activeUser = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>().FindById(userId);
 
             IQueryable<Pet> dbSet = new SystemContext().GetEntitySet<Pet>().AsQueryable();
 
-            List<Pet> petsList = (activeUser == null) ? dbSet.Where(p => p.Name.ToLower().Contains(searchParam.ToLower())).ToList() : dbSet.Where(p => p.Name == searchParam && p.UserId != activeUser.Id).ToList();
-            
-            var jsonString = JsonConvert.SerializeObject(petsList, Formatting.None, new JsonSerializerSettings()
-            {
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-            });
+            List<Pet> petsList = (activeUser == null) ? dbSet.Where(p => p.Name.ToLower().Contains(searchParam.ToLower())).ToList() : dbSet.Where(p => p.Name.ToLower().Contains(searchParam.ToLower()) && p.UserId != activeUser.Id).ToList();
+
+            var jsonString = JsonConvert.SerializeObject(petsList, Formatting.None, referenceLoopIgnore);
 
             Response.ContentType = "application/json";
 
@@ -238,16 +236,17 @@ namespace ASProject.Controllers
             return jsonResponse;
         }
 
-        private List<PetImage> GetImagesFromRequest(HttpFileCollectionBase files) 
+        private List<PetImage> GetImagesFromRequest(HttpFileCollectionBase files)
         {
             List<PetImage> petImages = new List<PetImage>();
-            for(int i=0; i<files.Count; i++)
+
+            for (int i = 0; i < files.Count; i++)
             {
-
-                //create the byte[] which is what EF uses for files.
+                //create the byte[] which is what EF uses for files
                 byte[] fileBytes = new byte[files[i].ContentLength];
-                files[i].InputStream.Read(fileBytes, 0, fileBytes.Length);
 
+                //copy byte array content of file 
+                files[i].InputStream.Read(fileBytes, 0, fileBytes.Length);
 
                 PetImage pi = new PetImage
                 {
@@ -256,12 +255,18 @@ namespace ASProject.Controllers
                     Type = files[i].ContentType,
                     Image = fileBytes,
                     CreatedOn = DateTime.Now,
-                    IsDisplayPic = true
+                    IsDisplayPic = true,
+
+                    //Implicitly assigned by EF: Id (PK) and PetId (FK). Lost of things happening implicitly with EF
+
                 };
-                petImages.Add(pi); 
+
+                petImages.Add(pi);
             }
+
             Debug.WriteLine("The petImages list: ");
             Debug.WriteLine(string.Join(",", petImages));
+
             return petImages;
         }
     }
